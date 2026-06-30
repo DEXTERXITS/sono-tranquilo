@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sono Tranquilo — O Método das 7 Noites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a14;
+    --bg2:#11101f;
+    --accent:#8b6fe8;
+    --accent2:#f4c95d;
+    --text:#f2f0fa;
+    --text-dim:#b9b4cf;
+    --card:#161427;
+    --card-border:#2c2747;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(139,111,232,.12), transparent 40%),
+      radial-gradient(circle at 80% 60%, rgba(244,201,93,.08), transparent 40%);
+  }
+  h1,h2,h3{font-family:'Playfair Display',serif;}
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px;}
+  a{text-decoration:none;color:inherit;}
+
+  /* HEADER */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    padding:16px 20px;display:flex;justify-content:space-between;align-items:center;
+    transition:background .3s, backdrop-filter .3s;
+  }
+  header.scrolled{background:rgba(10,10,20,.75);backdrop-filter:blur(10px);border-bottom:1px solid var(--card-border);}
+  .logo{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--accent2);}
+  .header-cta{
+    background:var(--accent);color:#fff;padding:10px 18px;border-radius:40px;font-weight:600;font-size:14px;
+  }
+
+  /* BUTTONS */
+  .btn{
+    position:relative;overflow:hidden;display:inline-block;
+    background:linear-gradient(135deg,var(--accent),#6d4fd1);
+    color:#fff;font-weight:700;font-size:16px;
+    padding:16px 28px;border-radius:14px;border:none;cursor:pointer;
+    transition:transform .2s, filter .2s, box-shadow .2s;
+    box-shadow:0 0 0 rgba(139,111,232,.5);
+    animation:pulseGlow 2.4s infinite;
+  }
+  .btn:hover{transform:scale(1.04);filter:brightness(1.15);}
+  .btn:active{transform:scale(.97);}
+  @keyframes pulseGlow{
+    0%,100%{box-shadow:0 0 0px rgba(139,111,232,.4);}
+    50%{box-shadow:0 0 22px rgba(139,111,232,.55);}
+  }
+  .btn-shimmer::after{
+    content:"";position:absolute;top:0;left:-150%;width:60%;height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent);
+    animation:shimmer 3s infinite;
+  }
+  @keyframes shimmer{0%{left:-150%;}100%{left:150%;}}
+  .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .6s linear;pointer-events:none;}
+  @keyframes rip{to{transform:scale(3);opacity:0;}}
+
+  /* FADE IN */
+  .fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s ease, transform .7s ease;}
+  .fade-in.show{opacity:1;transform:translateY(0);}
+
+  /* HERO */
+  .hero{padding:130px 0 60px;text-align:center;}
+  .badge{
+    display:inline-block;background:rgba(139,111,232,.15);border:1px solid var(--accent);
+    color:var(--accent2);padding:6px 16px;border-radius:30px;font-size:13px;font-weight:600;margin-bottom:20px;
+  }
+  .hero h1{font-size:44px;line-height:1.15;font-weight:800;margin-bottom:18px;}
+  .hero h1 span{color:var(--accent2);}
+  .hero p.sub{color:var(--text-dim);font-size:18px;margin-bottom:28px;}
+  .countdown{
+    display:flex;gap:10px;justify-content:center;margin:24px 0;
+  }
+  .countdown div{
+    background:var(--card);border:1px solid var(--card-border);border-radius:10px;
+    padding:10px 14px;min-width:56px;text-align:center;
+  }
+  .countdown div span{display:block;font-size:22px;font-weight:800;color:var(--accent2);}
+  .countdown div small{font-size:10px;color:var(--text-dim);}
+  .countdown.danger div span{color:#ff5c7a;}
+  .cta-row{display:flex;flex-direction:column;gap:14px;align-items:center;margin-top:24px;}
+  .cta-row .btn{width:100%;max-width:380px;text-align:center;}
+  .social-proof{margin-top:18px;color:var(--text-dim);font-size:14px;}
+
+  /* DOR */
+  .pain{padding:60px 0;text-align:center;}
+  .pain h2{font-size:30px;margin-bottom:30px;}
+  .pain-cards{display:grid;gap:16px;}
+  .pain-card{
+    background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);
+    padding:20px;text-align:left;display:flex;gap:14px;align-items:flex-start;
+  }
+  .pain-card .icon{font-size:22px;}
+
+  /* BENEFITS */
+  .benefits{padding:50px 0;}
+  .benefits h2{font-size:30px;text-align:center;margin-bottom:30px;}
+  .benefit-grid{display:grid;gap:14px;}
+  .benefit-item{
+    background:var(--card);border:1px solid var(--card-border);border-radius:14px;
+    padding:16px 18px;display:flex;gap:12px;align-items:center;
+  }
+
+  /* PRICING */
+  .pricing{padding:60px 0;}
+  .pricing h2{font-size:30px;text-align:center;margin-bottom:30px;}
+  .price-cards{display:grid;gap:22px;}
+  .price-card{
+    background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);
+    padding:28px;text-align:center;transform:scale(.95);opacity:0;transition:transform .6s, opacity .6s;
+  }
+  .price-card.show{transform:scale(1);opacity:1;}
+  .price-card.featured{border:2px solid var(--accent2);background:linear-gradient(160deg,#1b1733,#161427);position:relative;}
+  .price-badge{
+    position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+    background:var(--accent2);color:#1a1330;font-weight:800;font-size:12px;
+    padding:6px 16px;border-radius:30px;animation:pulseGlow 2s infinite;
+  }
+  .price-old{color:var(--text-dim);text-decoration:line-through;font-size:16px;}
+  .price-new{font-size:38px;font-weight:800;color:var(--accent2);margin:6px 0 18px;}
+  .price-list{list-style:none;text-align:left;margin:0 0 22px;padding:0;}
+  .price-list li{padding:6px 0;color:var(--text-dim);font-size:14px;display:flex;gap:8px;}
+
+  /* GUARANTEE */
+  .guarantee{padding:50px 0;text-align:center;}
+  .guarantee .shield{font-size:50px;margin-bottom:10px;}
+  .guarantee h3{font-size:24px;margin-bottom:10px;}
+  .guarantee p{color:var(--text-dim);}
+
+  /* FAQ */
+  .faq{padding:50px 0;}
+  .faq h2{font-size:28px;text-align:center;margin-bottom:24px;}
+  .faq-item{border-bottom:1px solid var(--card-border);padding:16px 0;cursor:pointer;}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;font-weight:600;}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;color:var(--text-dim);font-size:14px;}
+  .faq-item.open .faq-a{max-height:200px;padding-top:10px;}
+  .faq-icon{transition:transform .3s;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+
+  /* FINAL CTA */
+  .final-cta{padding:60px 0;text-align:center;}
+  .final-cta h2{font-size:30px;margin-bottom:16px;}
+  .trust-line{margin-top:18px;color:var(--text-dim);font-size:13px;}
+
+  footer{padding:40px 20px;text-align:center;color:var(--text-dim);font-size:12px;border-top:1px solid var(--card-border);}
+  footer a{margin:0 8px;}
+
+  .social-floater{
+    position:fixed;bottom:18px;left:18px;background:var(--card);border:1px solid var(--card-border);
+    border-radius:14px;padding:10px 16px;font-size:13px;display:flex;align-items:center;gap:8px;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);transform:translateY(60px);opacity:0;transition:transform .4s, opacity .4s;
+    z-index:90;max-width:260px;
+  }
+  .social-floater.show{transform:translateY(0);opacity:1;}
+
+  @media(min-width:680px){
+    .pain-cards{grid-template-columns:repeat(3,1fr);}
+    .benefit-grid{grid-template-columns:repeat(2,1fr);}
+    .price-cards{grid-template-columns:repeat(2,1fr);}
+    .hero h1{font-size:56px;}
+  }
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="logo">Sono Tranquilo</div>
+  <a href="#oferta" class="header-cta">Quero agora →</a>
+</header>
+
+<section class="hero wrap">
+  <div class="badge">👶 MATERNIDADE | MÉTODO TESTADO POR MÃES REAIS</div>
+  <h1>Seu Bebê Pode Dormir a <span>Noite Toda</span> em Até 7 Dias</h1>
+  <p class="sub">Sem fórmula mágica, sem deixar chorando sozinho por horas. Um método simples de rotina que ensina o bebê a dormir — e devolve suas noites de sono.</p>
+
+  <div class="countdown" id="countdown">
+    <div><span id="cd-h">00</span><small>HORAS</small></div>
+    <div><span id="cd-m">15</span><small>MIN</small></div>
+    <div><span id="cd-s">00</span><small>SEG</small></div>
+  </div>
+
+  <div class="cta-row" id="oferta">
+    <a href="#checkout-basico" class="btn btn-shimmer">Oferta Básica — R$ 1,99 →</a>
+    <a href="#checkout-completo" class="btn btn-shimmer">Oferta Completa — R$ 9,90 (MAIS POPULAR) →</a>
+  </div>
+  <p class="social-proof">Mais de 1.400 mães já aplicaram o método</p>
+</section>
+
+<section class="pain wrap fade-in">
+  <h2>Mais uma noite em claro embalando o bebê?</h2>
+  <div class="pain-cards">
+    <div class="pain-card"><span class="icon">❌</span><div>Você tenta tudo e o bebê acorda a cada 1-2 horas</div></div>
+    <div class="pain-card"><span class="icon">❌</span><div>Cansaço acumulado afetando seu humor e sua rotina</div></div>
+    <div class="pain-card"><span class="icon">❌</span><div>Medo de "fazer errado" e seguir conselhos contraditórios</div></div>
+  </div>
+</section>
+
+<section class="benefits wrap fade-in">
+  <h2>O Que Você Recebe</h2>
+  <div class="benefit-grid">
+    <div class="benefit-item">✅ Método das 7 Noites passo a passo</div>
+    <div class="benefit-item">✅ Rotina pronta por faixa etária</div>
+    <div class="benefit-item">✅ Checklist de ambiente ideal de sono</div>
+    <div class="benefit-item">✅ Como lidar com regressões de sono</div>
+  </div>
+</section>
+
+<section class="pricing wrap" id="precos">
+  <h2 class="fade-in">Escolha Sua Oferta</h2>
+  <div class="price-cards">
+    <div class="price-card fade-in">
+      <h3>Guia Essencial</h3>
+      <div class="price-old">R$ 19,90</div>
+      <div class="price-new">R$ 1,99</div>
+      <ul class="price-list">
+        <li>📘 E-book Sono Tranquilo (versão resumida)</li>
+        <li>📩 Acesso imediato por e-mail</li>
+        <li>👶 Rotina básica de sono</li>
+      </ul>
+      <a href="#checkout-basico" class="btn btn-shimmer">Quero por R$ 1,99 →</a>
+    </div>
+    <div class="price-card featured fade-in">
+      <div class="price-badge">⭐ MAIS COMPLETO</div>
+      <h3>Método Completo</h3>
+      <div class="price-old">R$ 37,90</div>
+      <div class="price-new">R$ 9,90</div>
+      <ul class="price-list">
+        <li>📘 E-book completo — 8 capítulos</li>
+        <li>🗓️ Método das 7 Noites detalhado</li>
+        <li>📊 Bônus 1: Planilha de registro de sono</li>
+        <li>✅ Bônus 2: Checklist de rotina imprimível</li>
+        <li>🔊 Bônus 3: Guia de ruído branco</li>
+        <li>🛡️ Garantia de 15 dias</li>
+      </ul>
+      <a href="#checkout-completo" class="btn btn-shimmer">Quero o completo por R$ 9,90 →</a>
+    </div>
+  </div>
+</section>
+
+<section class="guarantee wrap fade-in">
+  <div class="shield">🛡️</div>
+  <h3>Garantia incondicional de 15 dias</h3>
+  <p>Se não funcionar pra você, devolvemos 100% do seu dinheiro. Sem perguntas.</p>
+</section>
+
+<section class="faq wrap fade-in">
+  <h2>Perguntas Frequentes</h2>
+  <div class="faq-item">
+    <div class="faq-q">Como recebo após o pagamento? <span class="faq-icon">+</span></div>
+    <div class="faq-a">O acesso é enviado por e-mail imediatamente após a confirmação do pagamento.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Funciona para recém-nascidos? <span class="faq-icon">+</span></div>
+    <div class="faq-a">O método é mais indicado a partir dos 4 meses. Para recém-nascidos, o guia traz orientações específicas de adaptação.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Preciso deixar o bebê chorando sozinho? <span class="faq-icon">+</span></div>
+    <div class="faq-a">Não. O método respeita seus limites e os do bebê, com progressão gradual.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Qual a diferença entre o Básico e o Completo? <span class="faq-icon">+</span></div>
+    <div class="faq-a">O Completo traz todos os 8 capítulos, os 3 bônus e a garantia estendida.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">E se eu não gostar? <span class="faq-icon">+</span></div>
+    <div class="faq-a">Garantia de 15 dias, reembolso total, sem burocracia.</div>
+  </div>
+</section>
+
+<section class="final-cta wrap fade-in">
+  <h2>Suas noites de sono podem começar hoje</h2>
+  <div class="countdown" id="countdown2">
+    <div><span class="cd-h">00</span><small>HORAS</small></div>
+    <div><span class="cd-m">15</span><small>MIN</small></div>
+    <div><span class="cd-s">00</span><small>SEG</small></div>
+  </div>
+  <div class="cta-row">
+    <a href="#checkout-basico" class="btn btn-shimmer">Oferta Básica — R$ 1,99 →</a>
+    <a href="#checkout-completo" class="btn btn-shimmer">Oferta Completa — R$ 9,90 →</a>
+  </div>
+  <p class="trust-line">Pagamento seguro · Acesso imediato · Garantia 15 dias</p>
+</section>
+
+<footer>
+  © 2026 Sono Tranquilo. Todos os direitos reservados.<br>
+  <a href="#">Termos</a> | <a href="#">Privacidade</a> | <a href="#">Contato</a>
+</footer>
+
+<div class="social-floater" id="floater">🔥 <span id="floater-text">37 mães vendo agora</span></div>
+
+<script>
+// HEADER SCROLL
+window.addEventListener('scroll', () => {
+  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// FADE IN ON SCROLL
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('show'), i * 80);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: .15 });
+document.querySelectorAll('.fade-in, .price-card').forEach(el => obs.observe(el));
+
+// COUNTDOWN (15 min loop)
+function startCountdown(prefixIds, isClassBased) {
+  let total = 15*60;
+  const hEl = isClassBased ? document.querySelectorAll('.cd-h') : [document.getElementById('cd-h')];
+  const mEl = isClassBased ? document.querySelectorAll('.cd-m') : [document.getElementById('cd-m')];
+  const sEl = isClassBased ? document.querySelectorAll('.cd-s') : [document.getElementById('cd-s')];
+  const box = isClassBased ? document.getElementById('countdown2') : document.getElementById('countdown');
+  setInterval(() => {
+    total--;
+    if (total <= 0) total = 15*60;
+    const h = String(Math.floor(total/3600)).padStart(2,'0');
+    const m = String(Math.floor((total%3600)/60)).padStart(2,'0');
+    const s = String(total%60).padStart(2,'0');
+    hEl.forEach(el=>el.textContent=h);
+    mEl.forEach(el=>el.textContent=m);
+    sEl.forEach(el=>el.textContent=s);
+    box.classList.toggle('danger', total <= 180);
+  }, 1000);
+}
+startCountdown(null, false);
+startCountdown(null, true);
+
+// SOCIAL PROOF FLOATER
+const floater = document.getElementById('floater');
+const floaterText = document.getElementById('floater-text');
+function showFloater(){
+  floaterText.textContent = (Math.floor(Math.random()*(67-23+1))+23) + " mães vendo agora";
+  floater.classList.add('show');
+  setTimeout(()=>floater.classList.remove('show'), 5000);
+}
+setTimeout(showFloater, 3000);
+setInterval(showFloater, (Math.random()*7+8)*1000);
+
+// RIPPLE EFFECT
+document.querySelectorAll('.btn').forEach(btn => {
+  btn.addEventListener('click', function(e){
+    const rect = this.getBoundingClientRect();
+    const circle = document.createElement('span');
+    const size = Math.max(rect.width, rect.height);
+    circle.className = 'ripple';
+    circle.style.width = circle.style.height = size+'px';
+    circle.style.left = (e.clientX - rect.left - size/2)+'px';
+    circle.style.top = (e.clientY - rect.top - size/2)+'px';
+    this.appendChild(circle);
+    setTimeout(()=>circle.remove(), 600);
+  });
+});
+
+// FAQ ACCORDION
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+</script>
+
+</body>
+</html>
