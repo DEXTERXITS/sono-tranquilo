@@ -167,6 +167,30 @@
   }
   .social-floater.show{transform:translateY(0);opacity:1;}
 
+  /* MODAL OFERTA INDISPONÍVEL */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(5,5,12,.75);backdrop-filter:blur(4px);
+    display:flex;align-items:center;justify-content:center;z-index:200;
+    opacity:0;pointer-events:none;transition:opacity .25s ease;padding:20px;
+  }
+  .modal-overlay.show{opacity:1;pointer-events:all;}
+  .modal-box{
+    background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);
+    padding:30px 26px;max-width:380px;text-align:center;
+    transform:scale(.9);transition:transform .25s ease;
+  }
+  .modal-overlay.show .modal-box{transform:scale(1);}
+  .modal-box .emoji{font-size:42px;margin-bottom:10px;}
+  .modal-box h3{font-size:20px;margin-bottom:10px;}
+  .modal-box p{color:var(--text-dim);font-size:14px;margin-bottom:20px;line-height:1.5;}
+  .modal-spinner{
+    width:22px;height:22px;border:3px solid var(--card-border);border-top-color:var(--accent2);
+    border-radius:50%;margin:0 auto 14px;animation:spin .7s linear infinite;display:none;
+  }
+  .modal-overlay.redirecting .modal-spinner{display:block;}
+  .modal-overlay.redirecting .modal-cta-wrap{display:none;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
   @media(min-width:680px){
     .pain-cards{grid-template-columns:repeat(3,1fr);}
     .benefit-grid{grid-template-columns:repeat(2,1fr);}
@@ -194,8 +218,8 @@
   </div>
 
   <div class="cta-row" id="oferta">
-    <a href="#checkout-basico" class="btn btn-shimmer">Oferta Básica — R$ 14,90 →</a>
-    <a href="#checkout-completo" class="btn btn-shimmer">Oferta Completa — R$ 27,00 (MAIS POPULAR) →</a>
+    <a href="javascript:void(0)" class="btn btn-shimmer btn-basico">Oferta Básica — R$ 14,90 →</a>
+    <a href="https://pay.kirvano.com/76dfcb40-5b79-4640-a6ea-9b41a2c76941" class="btn btn-shimmer">Oferta Completa — R$ 27,00 (MAIS POPULAR) →</a>
   </div>
   <p class="social-proof">Mais de 1.400 mães já aplicaram o método</p>
 </section>
@@ -231,7 +255,7 @@
         <li>📩 Acesso imediato por e-mail</li>
         <li>👶 Rotina básica de sono</li>
       </ul>
-      <a href="#checkout-basico" class="btn btn-shimmer">Quero por R$ 14,90 →</a>
+      <a href="javascript:void(0)" class="btn btn-shimmer btn-basico">Quero por R$ 14,90 →</a>
     </div>
     <div class="price-card featured fade-in">
       <div class="price-badge">⭐ MAIS COMPLETO</div>
@@ -246,7 +270,7 @@
         <li>🔊 Bônus 3: Guia de ruído branco</li>
         <li>🛡️ Garantia de 15 dias</li>
       </ul>
-      <a href="#checkout-completo" class="btn btn-shimmer">Quero o completo por R$ 27,00 →</a>
+      <a href="https://pay.kirvano.com/76dfcb40-5b79-4640-a6ea-9b41a2c76941" class="btn btn-shimmer">Quero o completo por R$ 27,00 →</a>
     </div>
   </div>
 </section>
@@ -289,8 +313,8 @@
     <div><span class="cd-s">00</span><small>SEG</small></div>
   </div>
   <div class="cta-row">
-    <a href="#checkout-basico" class="btn btn-shimmer">Oferta Básica — R$ 14,90 →</a>
-    <a href="#checkout-completo" class="btn btn-shimmer">Oferta Completa — R$ 27,00 →</a>
+    <a href="javascript:void(0)" class="btn btn-shimmer btn-basico">Oferta Básica — R$ 14,90 →</a>
+    <a href="https://pay.kirvano.com/76dfcb40-5b79-4640-a6ea-9b41a2c76941" class="btn btn-shimmer">Oferta Completa — R$ 27,00 →</a>
   </div>
   <p class="trust-line">Pagamento seguro · Acesso imediato · Garantia 15 dias</p>
 </section>
@@ -301,6 +325,18 @@
 </footer>
 
 <div class="social-floater" id="floater">🔥 <span id="floater-text">37 mães vendo agora</span></div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="emoji">😔</div>
+    <h3>Essa oferta saiu do ar</h3>
+    <p>As vagas no valor promocional de <strong>R$ 14,90</strong> acabaram. Mas calma — garantimos seu acesso na versão completa, com desconto e todos os bônus inclusos.</p>
+    <div class="modal-spinner"></div>
+    <div class="modal-cta-wrap">
+      <a href="https://pay.kirvano.com/76dfcb40-5b79-4640-a6ea-9b41a2c76941" class="btn btn-shimmer" style="width:100%;display:block;">Ver oferta completa →</a>
+    </div>
+  </div>
+</div>
 
 <script>
 // HEADER SCROLL
@@ -373,6 +409,19 @@ document.querySelectorAll('.faq-item').forEach(item => {
     const wasOpen = item.classList.contains('open');
     document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
     if (!wasOpen) item.classList.add('open');
+  });
+});
+
+// OFERTA BÁSICA "INDISPONÍVEL" -> REDIRECIONA PRA COMPLETA
+const modal = document.getElementById('modalOverlay');
+const COMPLETO_URL = "https://pay.kirvano.com/76dfcb40-5b79-4640-a6ea-9b41a2c76941";
+document.querySelectorAll('.btn-basico').forEach(btn => {
+  btn.addEventListener('click', () => {
+    modal.classList.add('show');
+    setTimeout(() => {
+      modal.classList.add('redirecting');
+      setTimeout(() => { window.location.href = COMPLETO_URL; }, 1800);
+    }, 1600);
   });
 });
 </script>
